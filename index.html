@@ -1,0 +1,2013 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>
+    Weather Atlas — Explore Weather Icons &amp; Live Telemetry Station
+  </title>
+  <meta name="description"
+    content="Explore weather condition taxonomy, accessible symbol design, and experience a live high-throughput AI atmospheric telemetry dashboard." />
+
+  <!-- Tailwind CSS & Lucide Icons -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Official Lenis Smooth Scroll Engine CDN (jsdelivr with unpkg fallback) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lenis@1.1.20/dist/lenis.css" />
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.20/dist/lenis.min.js" onerror="
+        this.onerror = null;
+        this.src = 'https://unpkg.com/lenis@1.1.20/dist/lenis.min.js';
+      "></script>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
+    rel="stylesheet" />
+
+  <script>
+    tailwind.config = {
+      darkMode: ["class", '[data-theme="dark"]'],
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', "sans-serif"],
+            mono: ['"JetBrains Mono"', "monospace"],
+          },
+          colors: {
+            brand: {
+              orange: "#f97316",
+              orangeHover: "#ea580c",
+              blue: "#0284c7",
+              emerald: "#10b981",
+              amber: "#f59e0b",
+              purple: "#8b5cf6",
+            },
+          },
+        },
+      },
+    };
+  </script>
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body class="selection:bg-orange-500/30">
+  <!-- ==========================================================================
+       NEXT-GEN ATMOSPHERIC RADAR PRELOADER (THEME-ALIGNED & FAST)
+       ========================================================================== -->
+  <div id="atmospheric-preloader" class="weather-preloader-root" role="progressbar"
+    aria-label="Loading Weather Atlas Telemetry Engine" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+    <!-- Ambient Atmospheric Backdrop Glow & Isobar Grid -->
+    <div class="preloader-backdrop-glow" aria-hidden="true"></div>
+    <div class="preloader-isobar-grid" aria-hidden="true"></div>
+
+    <div class="preloader-content-wrap">
+      <!-- Central Orbital Weather Radar Hologram -->
+      <div class="preloader-radar-stage">
+        <!-- Outer Compass & Radar Rings with Cardinal Markers -->
+        <div class="preloader-radar-circle preloader-radar-outer">
+          <span class="radar-cardinal cardinal-n">N</span>
+          <span class="radar-cardinal cardinal-e">E</span>
+          <span class="radar-cardinal cardinal-s">S</span>
+          <span class="radar-cardinal cardinal-w">W</span>
+        </div>
+        <div class="preloader-radar-circle preloader-radar-middle"></div>
+        <div class="preloader-radar-circle preloader-radar-inner"></div>
+
+        <!-- 360° Rotating Radar Sweep Cone -->
+        <div class="preloader-sweep-cone"></div>
+
+        <!-- Orbiting Atmospheric Satellite / Particle Beacons -->
+        <div class="preloader-satellite-orbit orbit-1">
+          <div class="satellite-blip blip-orange"></div>
+        </div>
+        <div class="preloader-satellite-orbit orbit-2">
+          <div class="satellite-blip blip-cyan"></div>
+        </div>
+        <div class="preloader-satellite-orbit orbit-3">
+          <div class="satellite-blip blip-emerald"></div>
+        </div>
+
+        <!-- Central Glassmorphic Weather Icon Capsule -->
+        <div class="preloader-core-capsule">
+          <div class="preloader-core-pulse"></div>
+          <div id="loader-icon-container" class="preloader-icon-wrap">
+            <i data-lucide="sun" class="w-10 h-10 text-amber-400"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Telemetry Info & Dynamic Phase Status -->
+      <div class="preloader-telemetry-text">
+        <div class="preloader-badge">
+          <span class="preloader-pulse-dot"></span>
+          <span class="preloader-badge-label">WEATHER ATLAS &bull; TELEMETRY STATION</span>
+        </div>
+
+        <h2 class="preloader-headline">Synchronizing Satellite Atmosphere</h2>
+
+        <p id="loader-status-msg" class="preloader-status-msg">
+          Calibrating Doppler radar &amp; atmospheric telemetry...
+        </p>
+
+        <!-- Live Telemetry Coordinates & Barometric Stream -->
+        <div class="preloader-telemetry-pills">
+          <span class="tele-pill"><i data-lucide="compass" class="w-3 h-3 text-sky-400"></i> <span id="loader-tele-coords">28.61° N, 77.20° E</span></span>
+          <span class="tele-pill"><i data-lucide="gauge" class="w-3 h-3 text-amber-400"></i> <span id="loader-tele-baro">1013.25 hPa</span></span>
+          <span class="tele-pill"><i data-lucide="radio" class="w-3 h-3 text-emerald-400"></i> <span id="loader-tele-rate">LIVE FEED</span></span>
+        </div>
+      </div>
+
+      <!-- Precision Glowing Progress Bar & Percentage -->
+      <div class="preloader-progress-box">
+        <div class="preloader-progress-track">
+          <div id="loader-progress-bar" class="preloader-progress-fill" style="width: 0%">
+            <span class="preloader-progress-flare"></span>
+          </div>
+        </div>
+        <div class="preloader-progress-meta">
+          <span class="preloader-meta-label"><span class="preloader-scanner-char">&gt;</span> <span id="loader-meta-phase">RADAR LOCK</span></span>
+          <span id="loader-percentage" class="preloader-percentage-num">0%</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Micro-lerp 60fps luxury custom cursor elements -->
+  <div class="premium-cursor-dot" id="cursor-dot" aria-hidden="true"></div>
+  <svg class="premium-cursor-follower" id="cursor-follower" viewBox="0 0 34 34" aria-hidden="true">
+    <circle></circle>
+  </svg>
+
+  <!-- ==========================================================================
+       SECTION 1: SKIP LINK (KEYBOARD ACCESSIBILITY)
+       ========================================================================== -->
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+  <div id="a11y-status" class="sr-only" role="status" aria-live="polite"></div>
+
+  <!-- ==========================================================================
+       SECTION 2: HEADER / NAVIGATION
+       ========================================================================== -->
+  <header
+    class="sticky top-0 z-40 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 transition-colors">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 flex items-center justify-between py-4">
+      <a href="#hero"
+        class="flex items-center gap-3 font-extrabold text-xl tracking-tight text-slate-900 dark:text-white"
+        aria-label="Weather Atlas Homepage">
+        <div
+          class="w-9 h-9 rounded-xl bg-gradient-to-tr from-orange-500 to-amber-400 flex items-center justify-center text-white shadow-lg shadow-orange-500/25">
+          <i data-lucide="cloud-sun" class="w-5 h-5"></i>
+        </div>
+        <span>Weather Atlas</span>
+      </a>
+
+      <!-- Desktop Anchors (Routed through Lenis) -->
+      <nav aria-label="Main Navigation" class="hidden md:flex items-center gap-7">
+        <a href="#interactive-display"
+          class="nav-anchor text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-orange-500 transition-colors">Explorer</a>
+        <a href="#quick-selector"
+          class="nav-anchor text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-orange-500 transition-colors">Quick
+          Select</a>
+        <a href="#explore-conditions"
+          class="nav-anchor text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-orange-500 transition-colors">Taxonomy</a>
+        <a href="#categories"
+          class="nav-anchor text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-orange-500 transition-colors">Categories</a>
+        <a href="#guide"
+          class="nav-anchor text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-orange-500 transition-colors">A11y
+          Guide</a>
+        <a href="#how-it-works"
+          class="nav-anchor text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-orange-500 transition-colors">How
+          It Works</a>
+        <a href="#faq"
+          class="nav-anchor text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-orange-500 transition-colors">FAQ</a>
+      </nav>
+
+      <!-- Actions -->
+      <div class="flex items-center gap-3">
+        <button id="theme-btn-global"
+          class="p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 transition-colors"
+          aria-label="Toggle light or dark theme">
+          <i data-lucide="moon" class="w-4 h-4 hidden dark:block"></i>
+          <i data-lucide="sun" class="w-4 h-4 block dark:hidden"></i>
+        </button>
+
+        <!-- CTA Launching Fullscreen Dashboard -->
+        <button id="open-dash-cta"
+          class="flex items-center gap-2.5 px-4 py-2.5 rounded-xl bg-gradient-to-r from-orange-600 to-amber-500 hover:from-orange-500 hover:to-amber-400 text-white font-bold text-sm shadow-lg shadow-orange-500/30 transition-all active:scale-95"
+          title="Launch Real-Time Live Weather Dashboard">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 anim-live-pulse shadow-[0_0_8px_#34d399]"></span>
+          <span>Live AI Dashboard</span>
+        </button>
+
+        <!-- Mobile Menu Button -->
+        <button id="mobile-menu-toggle"
+          class="md:hidden p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300"
+          aria-label="Toggle menu" aria-expanded="false">
+          <i data-lucide="menu" class="w-5 h-5"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Navigation Drawer -->
+    <div id="mobile-menu-drawer"
+      class="md:hidden border-t border-slate-200 dark:border-slate-800 px-4 py-4 space-y-2 bg-white dark:bg-slate-900 hidden">
+      <a href="#interactive-display"
+        class="nav-anchor block px-3 py-2 rounded-lg text-sm font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800">Condition
+        Explorer</a>
+      <a href="#quick-selector"
+        class="nav-anchor block px-3 py-2 rounded-lg text-sm font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800">Quick
+        Selector</a>
+      <a href="#explore-conditions"
+        class="nav-anchor block px-3 py-2 rounded-lg text-sm font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800">Taxonomy
+        Directory</a>
+      <a href="#categories"
+        class="nav-anchor block px-3 py-2 rounded-lg text-sm font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800">Categories</a>
+      <a href="#guide"
+        class="nav-anchor block px-3 py-2 rounded-lg text-sm font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800">Accessibility
+        Guide</a>
+      <a href="#how-it-works"
+        class="nav-anchor block px-3 py-2 rounded-lg text-sm font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800">How
+        It Works</a>
+      <a href="#faq"
+        class="nav-anchor block px-3 py-2 rounded-lg text-sm font-semibold text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800">FAQ</a>
+    </div>
+  </header>
+
+  <main id="main-content" class="flex-1">
+    <!-- ==========================================================================
+         SECTION 3: HERO / INTRODUCTION (ENRICHED WITH METEOROLOGICAL VECTOR ART)
+         ========================================================================== -->
+    <section class="py-16 md:py-24 relative overflow-hidden" id="hero">
+      <div
+        class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center relative z-10">
+        <div class="lg:col-span-7 space-y-6">
+          <div
+            class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-orange-100 dark:bg-orange-950/60 border border-orange-200 dark:border-orange-800/80 text-orange-600 dark:text-orange-400 text-xs font-bold uppercase tracking-wider">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 anim-live-pulse"></span>
+            Static Condition Explorer &bull; Live Telemetry
+          </div>
+          <h1
+            class="text-4xl sm:text-5xl lg:text-6xl font-black text-slate-900 dark:text-white tracking-tight leading-[1.15]">
+            Explore weather conditions
+            <span class="bg-gradient-to-r from-orange-500 via-pink-500 to-amber-500 bg-clip-text text-transparent">at a
+              glance.</span>
+          </h1>
+          <p class="text-lg text-slate-600 dark:text-slate-300 max-w-xl leading-relaxed">
+            Recognize common meteorological phenomena visually, verify
+            deterministic data-to-UI mapping without external APIs, or launch
+            the fullscreen real-time station powered by Open-Meteo and Gemini
+            2.5 Flash.
+          </p>
+          <div class="flex flex-wrap items-center gap-4 pt-2">
+            <a href="#interactive-display"
+              class="nav-anchor px-6 py-3.5 rounded-2xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold text-base hover:bg-slate-800 dark:hover:bg-slate-100 transition-colors shadow-lg active:scale-95">
+              Launch Condition Explorer
+            </a>
+            <button id="hero-launch-dash"
+              class="flex items-center gap-2.5 px-6 py-3.5 rounded-2xl bg-gradient-to-r from-orange-600 to-amber-500 hover:from-orange-500 hover:to-amber-400 text-white font-bold text-base shadow-xl shadow-orange-500/25 transition-all active:scale-95">
+              <span class="w-2 h-2 rounded-full bg-emerald-300 anim-live-pulse shadow-[0_0_8px_#6ee7b7]"></span>
+              <span>Live Weather Dashboard</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Atmospheric Illustration Composition -->
+        <div
+          class="lg:col-span-5 bg-white dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700/80 rounded-3xl p-6 shadow-xl space-y-4 hover-lift">
+          <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-700/70">
+            <span class="text-xs font-mono font-bold tracking-wider text-slate-400 uppercase">Interactive Token
+              Verification</span>
+            <span
+              class="text-xs font-bold text-emerald-500 bg-emerald-50 dark:bg-emerald-950/60 px-2.5 py-1 rounded-full">Spec
+              1.0 Aligned</span>
+          </div>
+
+          <!-- Stylized Weather Canvas Box -->
+          <div
+            class="w-full h-44 rounded-2xl bg-gradient-to-tr from-amber-100 via-sky-100 to-indigo-100 dark:from-slate-900 dark:via-sky-950 dark:to-indigo-950 relative overflow-hidden flex items-center justify-center border border-slate-200/60 dark:border-slate-700/60">
+            <svg class="w-full h-full" viewBox="0 0 400 180" fill="none">
+              <circle cx="280" cy="60" r="45" fill="#fde047" opacity="0.8" filter="blur(2px)" />
+              <circle cx="280" cy="60" r="32" fill="#f59e0b" />
+              <g stroke="#f59e0b" stroke-width="2.5" stroke-linecap="round" class="anim-sun-rot"
+                style="transform-origin: 280px 60px">
+                <line x1="280" y1="15" x2="280" y2="2" />
+                <line x1="280" y1="105" x2="280" y2="118" />
+                <line x1="235" y1="60" x2="222" y2="60" />
+                <line x1="325" y1="60" x2="338" y2="60" />
+                <line x1="248" y1="28" x2="238" y2="18" />
+                <line x1="312" y1="92" x2="322" y2="102" />
+              </g>
+              <path
+                d="M120,130 C120,105 140,85 168,88 C176,70 198,70 210,82 C222,80 238,90 236,108 C248,114 248,130 236,138 L120,138 Z"
+                fill="#93c5fd" opacity="0.75" class="anim-cloud-move" />
+              <path
+                d="M80,145 C80,118 102,100 130,104 C140,84 168,84 182,98 C196,96 214,108 212,126 C224,134 224,152 212,160 L80,160 Z"
+                fill="#ffffff" filter="drop-shadow(0 8px 16px rgba(0,0,0,0.08))" />
+              <g stroke="#38bdf8" stroke-width="2.5" stroke-linecap="round">
+                <line x1="90" y1="168" x2="84" y2="182" class="anim-rain-1" />
+                <line x1="120" y1="168" x2="114" y2="182" class="anim-rain-2" />
+                <line x1="150" y1="168" x2="144" y2="182" class="anim-rain-1" />
+                <line x1="180" y1="168" x2="174" y2="182" class="anim-rain-2" />
+              </g>
+            </svg>
+          </div>
+
+          <div class="grid grid-cols-3 gap-3 text-center">
+            <div
+              class="p-3 rounded-2xl bg-amber-50/70 dark:bg-amber-950/30 border border-amber-200/60 dark:border-amber-900/40 hover-lift">
+              <i data-lucide="sun" class="w-6 h-6 text-amber-500 mx-auto mb-1"></i>
+              <strong class="block text-xs font-bold text-slate-800 dark:text-slate-200">Sunny</strong>
+            </div>
+            <div
+              class="p-3 rounded-2xl bg-sky-50/70 dark:bg-sky-950/30 border border-sky-200/60 dark:border-sky-900/40 hover-lift">
+              <i data-lucide="cloud-sun" class="w-6 h-6 text-sky-500 mx-auto mb-1"></i>
+              <strong class="block text-xs font-bold text-slate-800 dark:text-slate-200">Partly Cloudy</strong>
+            </div>
+            <div
+              class="p-3 rounded-2xl bg-blue-50/70 dark:bg-blue-950/30 border border-blue-200/60 dark:border-blue-900/40 hover-lift">
+              <i data-lucide="cloud-rain" class="w-6 h-6 text-blue-500 mx-auto mb-1"></i>
+              <strong class="block text-xs font-bold text-slate-800 dark:text-slate-200">Rainy</strong>
+            </div>
+          </div>
+          <p class="text-xs text-slate-400 text-center">
+            Accessible SVG symbols ensure unambiguous recognition regardless
+            of platform font limitations.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         SECTION 4: INTERACTIVE WEATHER DISPLAY (CORE TOOL)
+         ========================================================================== -->
+    <section class="py-16 bg-slate-50 dark:bg-slate-900/50 border-y border-slate-200 dark:border-slate-800"
+      id="interactive-display">
+      <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div
+          class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-3xl p-6 sm:p-10 shadow-xl space-y-6">
+          <div
+            class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-100 dark:border-slate-700">
+            <div>
+              <span class="text-xs font-bold uppercase tracking-wider text-orange-500">Task Deliverable 1.1</span>
+              <h2 class="text-2xl font-black text-slate-900 dark:text-white">
+                Interactive Condition Display
+              </h2>
+            </div>
+            <div class="flex items-center gap-3">
+              <label for="atlas-condition-select" class="text-sm font-bold text-slate-900 dark:text-white">Choose
+                Condition:</label>
+              <select id="atlas-condition-select"
+                class="bg-slate-100 dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-xl px-4 py-2.5 font-bold text-sm text-slate-900 dark:text-white outline-none focus:ring-2 focus:ring-orange-500">
+                <!-- Dynamically populated -->
+              </select>
+            </div>
+          </div>
+
+          <!-- Main Selected Card Display -->
+          <div
+            class="grid grid-cols-1 md:grid-cols-12 gap-8 items-center bg-slate-50 dark:bg-slate-900/70 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 sm:p-8 hover-lift"
+            id="atlas-showcase-card">
+            <div
+              class="md:col-span-4 flex items-center justify-center p-6 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl shadow-sm aspect-square"
+              id="atlas-showcase-icon">
+              <!-- Rendered SVG Icon -->
+            </div>
+            <div class="md:col-span-8 space-y-3">
+              <div class="flex items-center gap-2">
+                <span id="atlas-showcase-cat"
+                  class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-orange-100 dark:bg-orange-950/80 text-orange-600 dark:text-orange-400">CLOUDS</span>
+                <span class="text-xs text-slate-400 font-mono" id="atlas-showcase-note">Static Dataset &bull; No API
+                  Latency</span>
+              </div>
+              <h3 id="atlas-showcase-title" class="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white">
+                Partly Cloudy
+              </h3>
+              <p id="atlas-showcase-desc" class="text-base text-slate-600 dark:text-slate-300 leading-relaxed">
+                Scattered cumulus clouds with intermittent sunny spells
+                throughout the daytime.
+              </p>
+
+              <div class="flex flex-wrap gap-2 pt-2 text-xs font-mono">
+                <span
+                  class="px-2.5 py-1 bg-white dark:bg-slate-800 rounded-md border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300">Data
+                  Key:
+                  <strong id="atlas-showcase-key" class="text-slate-900 dark:text-white">partly-cloudy</strong></span>
+                <span
+                  class="px-2.5 py-1 bg-white dark:bg-slate-800 rounded-md border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300">A11y
+                  Label:
+                  <strong id="atlas-showcase-a11y" class="text-slate-900 dark:text-white">Partly cloudy sky
+                    symbol</strong></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         SECTION 5: QUICK CONDITION SELECTOR
+         ========================================================================== -->
+    <section class="py-12 bg-white dark:bg-slate-900" id="quick-selector">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-4">
+        <div class="flex items-center justify-between">
+          <div>
+            <span class="text-xs font-bold uppercase tracking-wider text-orange-500">1-Click Fast Switching</span>
+            <h2 class="text-2xl font-black text-slate-900 dark:text-white">
+              Quick Condition Selector
+            </h2>
+          </div>
+          <span class="text-xs text-slate-400">Click any pill to synchronize the explorer</span>
+        </div>
+
+        <div class="flex flex-wrap gap-2.5" id="quick-chips-container">
+          <!-- Dynamically populated chips -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         SECTION 6: EXPLORE ALL CONDITIONS (SEARCHABLE GRID)
+         ========================================================================== -->
+    <section class="py-16 md:py-20 bg-slate-50 dark:bg-slate-900/50 border-t border-slate-200 dark:border-slate-800"
+      id="explore-conditions">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+          <div>
+            <span class="text-xs font-bold uppercase tracking-wider text-orange-500">Taxonomy Directory</span>
+            <h2 class="text-3xl font-extrabold text-slate-900 dark:text-white mt-1">
+              Explore All Conditions
+            </h2>
+            <p class="text-sm text-slate-500 dark:text-slate-400">
+              Select any condition card to update the primary showcase display
+            </p>
+          </div>
+          <div class="relative w-full md:w-80">
+            <input type="text" id="atlas-search"
+              class="w-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl py-2.5 pl-10 pr-4 text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-orange-500"
+              placeholder="Search name or description..." />
+            <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5"></i>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4" id="atlas-cards-grid">
+          <!-- Dynamically populated cards -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         SECTION 7: CONDITION CATEGORIES
+         ========================================================================== -->
+    <section class="py-16 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800" id="categories">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+        <div class="flex items-center justify-between flex-wrap gap-4">
+          <div>
+            <span class="text-xs font-bold uppercase tracking-wider text-orange-500">Classification System</span>
+            <h2 class="text-2xl font-black text-slate-900 dark:text-white">
+              Condition Categories
+            </h2>
+          </div>
+          <button id="reset-cat-filter-btn" class="text-xs font-bold text-orange-500 hover:underline">
+            Show All Categories
+          </button>
+        </div>
+
+        <div class="flex flex-wrap gap-3" id="cat-filter-buttons">
+          <button
+            class="cat-pill active px-4 py-2 rounded-xl text-xs font-extrabold bg-orange-500 text-white shadow-md hover-lift"
+            data-category="all">
+            All (<span id="count-all">12</span>)
+          </button>
+          <button
+            class="cat-pill px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-orange-500 hover:text-white transition-all hover-lift"
+            data-category="Clear Skies">
+            Clear Skies (<span id="count-clear">2</span>)
+          </button>
+          <button
+            class="cat-pill px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-orange-500 hover:text-white transition-all hover-lift"
+            data-category="Clouds">
+            Clouds (<span id="count-clouds">3</span>)
+          </button>
+          <button
+            class="cat-pill px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-orange-500 hover:text-white transition-all hover-lift"
+            data-category="Precipitation">
+            Precipitation (<span id="count-precip">5</span>)
+          </button>
+          <button
+            class="cat-pill px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-orange-500 hover:text-white transition-all hover-lift"
+            data-category="Atmospheric">
+            Atmospheric (<span id="count-atmo">1</span>)
+          </button>
+          <button
+            class="cat-pill px-4 py-2 rounded-xl text-xs font-bold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-orange-500 hover:text-white transition-all hover-lift"
+            data-category="Wind">
+            Wind (<span id="count-wind">1</span>)
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         SECTION 8: ICON MEANING & ACCESSIBILITY GUIDE
+         ========================================================================== -->
+    <section class="py-16 md:py-24 bg-slate-50 dark:bg-slate-900/50 border-t border-slate-200 dark:border-slate-800"
+      id="guide">
+      <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
+        <div class="text-center space-y-2">
+          <span class="text-xs font-bold uppercase tracking-wider text-orange-500">WCAG 2.2 AA Compliance</span>
+          <h2 class="text-3xl font-extrabold text-slate-900 dark:text-white">
+            Icon Meaning and Accessibility Guide
+          </h2>
+          <p class="text-sm text-slate-500 dark:text-slate-400 max-w-xl mx-auto">
+            Ensuring meteorological states remain immediately recognizable
+            across visual, cognitive, and assistive domains.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div
+            class="p-6 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl space-y-3 hover-lift">
+            <div
+              class="w-12 h-12 rounded-xl bg-orange-100 dark:bg-orange-950/60 text-orange-600 dark:text-orange-400 flex items-center justify-center">
+              <i data-lucide="eye" class="w-6 h-6"></i>
+            </div>
+            <h3 class="font-extrabold text-base text-slate-900 dark:text-white">
+              Non-Color-Only Indicators
+            </h3>
+            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+              No weather condition relies solely on color hues. Each symbol
+              incorporates distinctive geometric silhouettes (e.g., zig-zag
+              lightning bolts, stellar snowflake branches, diagonal rain
+              dashes).
+            </p>
+          </div>
+
+          <div
+            class="p-6 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl space-y-3 hover-lift">
+            <div
+              class="w-12 h-12 rounded-xl bg-emerald-100 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
+              <i data-lucide="volume-2" class="w-6 h-6"></i>
+            </div>
+            <h3 class="font-extrabold text-base text-slate-900 dark:text-white">
+              Polite Screen Reader Announcements
+            </h3>
+            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+              Condition switches trigger concise announcements via an
+              <code>aria-live="polite"</code> region rather than re-reading
+              the entire page, eliminating cognitive overload for assistive
+              technology users.
+            </p>
+          </div>
+
+          <div
+            class="p-6 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl space-y-3 hover-lift">
+            <div
+              class="w-12 h-12 rounded-xl bg-sky-100 dark:bg-sky-950/60 text-sky-600 dark:text-sky-400 flex items-center justify-center">
+              <i data-lucide="keyboard" class="w-6 h-6"></i>
+            </div>
+            <h3 class="font-extrabold text-base text-slate-900 dark:text-white">
+              Keyboard Focus Ring Visibility
+            </h3>
+            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+              All interactive buttons, chips, native selects, and cards
+              maintain high-contrast <code>:focus-visible</code> indicators
+              with comfortable 44px minimum touch target dimensions.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         SECTION 9: HOW IT WORKS
+         ========================================================================== -->
+    <section class="py-16 md:py-20 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800"
+      id="how-it-works">
+      <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
+        <div class="text-center space-y-2">
+          <span class="text-xs font-bold uppercase tracking-wider text-orange-500">Pipeline Workflow</span>
+          <h2 class="text-3xl font-extrabold text-slate-900 dark:text-white">
+            How It Works
+          </h2>
+          <p class="text-sm text-slate-500 dark:text-slate-400">
+            Deterministic conditional rendering from static data object to
+            user interface.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 relative">
+          <div
+            class="p-6 rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 space-y-3 hover-lift">
+            <span
+              class="text-xs font-mono font-bold text-orange-500 bg-orange-100 dark:bg-orange-950/60 px-2.5 py-1 rounded-md">STEP
+              01</span>
+            <h3 class="font-bold text-base text-slate-900 dark:text-white">
+              Select Condition Key
+            </h3>
+            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+              Choose an option from the native dropdown, click a quick-chip,
+              or tap a card in the directory to trigger an event.
+            </p>
+          </div>
+
+          <div
+            class="p-6 rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 space-y-3 hover-lift">
+            <span
+              class="text-xs font-mono font-bold text-orange-500 bg-orange-100 dark:bg-orange-950/60 px-2.5 py-1 rounded-md">STEP
+              02</span>
+            <h3 class="font-bold text-base text-slate-900 dark:text-white">
+              Map Data to UI
+            </h3>
+            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+              The single source-of-truth object resolves the matching SVG
+              symbol, text description, category badge, and accessibility
+              metadata.
+            </p>
+          </div>
+
+          <div
+            class="p-6 rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 space-y-3 hover-lift">
+            <span
+              class="text-xs font-mono font-bold text-orange-500 bg-orange-100 dark:bg-orange-950/60 px-2.5 py-1 rounded-md">STEP
+              03</span>
+            <h3 class="font-bold text-base text-slate-900 dark:text-white">
+              Multi-Channel Presentation
+            </h3>
+            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+              The main display, directory grid, and screen reader notification
+              update concurrently with zero layout shift or network delay.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         SECTION 10: USE CASES
+         ========================================================================== -->
+    <section class="py-16 bg-slate-50 dark:bg-slate-900/50 border-t border-slate-200 dark:border-slate-800"
+      id="use-cases">
+      <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+        <div>
+          <span class="text-xs font-bold uppercase tracking-wider text-orange-500">Practical Application</span>
+          <h2 class="text-3xl font-extrabold text-slate-900 dark:text-white mt-1">
+            Target Use Cases
+          </h2>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div
+            class="p-6 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 space-y-2 hover-lift">
+            <h3 class="font-bold text-base text-slate-900 dark:text-white flex items-center gap-2">
+              <i data-lucide="layers" class="w-4 h-4 text-orange-500"></i>
+              UI Design System Prototyping
+            </h3>
+            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+              Preview how meteorological condition glyphs behave across light
+              and dark tokens before baking them into a production
+              application.
+            </p>
+          </div>
+
+          <div
+            class="p-6 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 space-y-2 hover-lift">
+            <h3 class="font-bold text-base text-slate-900 dark:text-white flex items-center gap-2">
+              <i data-lucide="graduation-cap" class="w-4 h-4 text-emerald-500"></i>
+              Teaching Conditional Rendering
+            </h3>
+            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+              Demonstrates pure vanilla JavaScript DOM synchronization without
+              heavy framework overhead or third-party state managers.
+            </p>
+          </div>
+
+          <div
+            class="p-6 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 space-y-2 hover-lift">
+            <h3 class="font-bold text-base text-slate-900 dark:text-white flex items-center gap-2">
+              <i data-lucide="check-circle" class="w-4 h-4 text-sky-500"></i>
+              Accessibility &amp; Assistive Testing
+            </h3>
+            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+              Verify how screen readers handle polite live regions, form
+              controls, and aria-expanded disclosure accordions in client
+              applications.
+            </p>
+          </div>
+
+          <div
+            class="p-6 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 space-y-2 hover-lift">
+            <h3 class="font-bold text-base text-slate-900 dark:text-white flex items-center gap-2">
+              <i data-lucide="cpu" class="w-4 h-4 text-purple-500"></i>
+              Live Telemetry Simulation
+            </h3>
+            <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+              Compare static deterministic models with real-world Open-Meteo
+              feeds and Gemini AI briefings directly within the same client
+              workspace.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         SECTION 11: FAQ ACCORDION
+         ========================================================================== -->
+    <section class="py-16 md:py-24 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800" id="faq">
+      <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+        <div class="text-center space-y-2">
+          <span class="text-xs font-bold uppercase tracking-wider text-orange-500">Technical Details</span>
+          <h2 class="text-3xl font-extrabold text-slate-900 dark:text-white">
+            Frequently Asked Questions
+          </h2>
+        </div>
+
+        <div class="space-y-3" id="faq-accordion-container">
+          <!-- Item 1 -->
+          <div class="border border-slate-200 dark:border-slate-700 rounded-2xl overflow-hidden hover-lift">
+            <button
+              class="faq-trigger w-full px-6 py-4 text-left font-bold text-sm text-slate-900 dark:text-white flex items-center justify-between hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
+              aria-expanded="false" aria-controls="faq-ans-1">
+              <span>Is this Weather Atlas using a live weather API?</span>
+              <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 transition-transform"></i>
+            </button>
+            <div id="faq-ans-1" class="faq-panel px-6 pb-4 text-xs text-slate-600 dark:text-slate-300 leading-relaxed"
+              hidden>
+              The main Weather Atlas page uses a deterministic static dataset
+              strictly adhering to the internship assignment. No external API
+              is required. However, clicking the 'Live Weather Dashboard'
+              button in the hero section opens a full-screen application
+              connected to the real-time Open-Meteo API.
+            </div>
+          </div>
+
+          <!-- Item 2 -->
+          <div class="border border-slate-200 dark:border-slate-700 rounded-2xl overflow-hidden hover-lift">
+            <button
+              class="faq-trigger w-full px-6 py-4 text-left font-bold text-sm text-slate-900 dark:text-white flex items-center justify-between hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
+              aria-expanded="false" aria-controls="faq-ans-2">
+              <span>How does selection synchronization work between
+                components?</span>
+              <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 transition-transform"></i>
+            </button>
+            <div id="faq-ans-2" class="faq-panel px-6 pb-4 text-xs text-slate-600 dark:text-slate-300 leading-relaxed"
+              hidden>
+              A single application state variable
+              (<code>selectedAtlasKey</code>) controls the active condition.
+              When you interact with the dropdown, quick chips, or directory
+              cards, an update function synchronizes all three representations
+              instantly.
+            </div>
+          </div>
+
+          <!-- Item 3 -->
+          <div class="border border-slate-200 dark:border-slate-700 rounded-2xl overflow-hidden hover-lift">
+            <button
+              class="faq-trigger w-full px-6 py-4 text-left font-bold text-sm text-slate-900 dark:text-white flex items-center justify-between hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
+              aria-expanded="false" aria-controls="faq-ans-3">
+              <span>How are light and dark themes persisted?</span>
+              <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 transition-transform"></i>
+            </button>
+            <div id="faq-ans-3" class="faq-panel px-6 pb-4 text-xs text-slate-600 dark:text-slate-300 leading-relaxed"
+              hidden>
+              Theme preferences are stored in the browser's
+              <code>localStorage</code> under <code>kroma-theme</code>. On
+              initial visit, the system evaluates
+              <code>prefers-color-scheme</code> so the page automatically
+              matches your OS appearance.
+            </div>
+          </div>
+
+          <!-- Item 4 -->
+          <div class="border border-slate-200 dark:border-slate-700 rounded-2xl overflow-hidden hover-lift">
+            <button
+              class="faq-trigger w-full px-6 py-4 text-left font-bold text-sm text-slate-900 dark:text-white flex items-center justify-between hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
+              aria-expanded="false" aria-controls="faq-ans-4">
+              <span>Can these SVG vector icons be reused in external
+                projects?</span>
+              <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 transition-transform"></i>
+            </button>
+            <div id="faq-ans-4" class="faq-panel px-6 pb-4 text-xs text-slate-600 dark:text-slate-300 leading-relaxed"
+              hidden>
+              Yes. All icons are pure SVG vectors rendered via Lucide, meaning
+              they scale losslessly to any resolution and inherit CSS color
+              tokens cleanly.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         SECTION 12: FINAL CTA / RETURN TO EXPLORER
+         ========================================================================== -->
+    <section class="py-16 bg-slate-50 dark:bg-slate-900/50 border-t border-slate-200 dark:border-slate-800"
+      id="final-cta">
+      <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-6">
+        <h2 class="text-3xl font-black text-slate-900 dark:text-white">
+          Ready to inspect condition mappings?
+        </h2>
+        <p class="text-sm text-slate-600 dark:text-slate-300 max-w-xl mx-auto">
+          Return to the interactive tool to compare all 12 weather conditions
+          or launch the live meteorological dashboard.
+        </p>
+        <div class="flex flex-wrap items-center justify-center gap-4">
+          <a href="#interactive-display"
+            class="nav-anchor px-6 py-3.5 rounded-2xl bg-orange-500 hover:bg-orange-600 text-white font-bold text-sm shadow-lg shadow-orange-500/25 transition-all active:scale-95">
+            Return to Condition Explorer
+          </a>
+          <button onclick="openDashboard()"
+            class="px-6 py-3.5 rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-900 dark:text-white font-bold text-sm transition-colors hover-lift">
+            Open Live Telemetry Dashboard
+          </button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ==========================================================================
+       SECTION 13: ELEVATED PRODUCTION FOOTER
+       ========================================================================== -->
+  <footer
+    class="relative bg-gradient-to-b from-slate-50/70 via-white to-slate-100/90 dark:from-slate-900/80 dark:via-slate-950 dark:to-slate-950 border-t border-slate-200/80 dark:border-slate-800/80 text-slate-700 dark:text-slate-300 transition-colors pt-16 pb-12 overflow-hidden"
+    aria-label="Site Footer">
+    <div
+      class="absolute -top-32 left-1/2 -translate-x-1/2 w-3/4 h-32 bg-orange-500/10 dark:bg-orange-500/5 blur-3xl pointer-events-none rounded-full"
+      aria-hidden="true"></div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12 relative z-10">
+      <!-- Top Row: Quick Condition Jumpers & System Health Status -->
+      <div
+        class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 pb-10 border-b border-slate-200/70 dark:border-slate-800/70">
+        <div class="flex flex-col sm:flex-row sm:items-center gap-3">
+          <span class="text-xs font-black uppercase tracking-wider text-orange-500 flex items-center gap-1.5 shrink-0">
+            <i data-lucide="compass" class="w-3.5 h-3.5"></i>
+            Quick Condition Jumpers:
+          </span>
+          <div class="flex flex-wrap gap-2">
+            <button onclick="jumpToCondition('sunny')"
+              class="px-3 py-1 rounded-full text-xs font-bold bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-orange-500 hover:text-orange-500 transition-all flex items-center gap-1.5 shadow-sm active:scale-95">
+              <i data-lucide="sun" class="w-3 h-3 text-amber-500"></i>
+              <span>Sunny</span>
+            </button>
+            <button onclick="jumpToCondition('thunderstorm')"
+              class="px-3 py-1 rounded-full text-xs font-bold bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-orange-500 hover:text-orange-500 transition-all flex items-center gap-1.5 shadow-sm active:scale-95">
+              <i data-lucide="cloud-lightning" class="w-3 h-3 text-purple-400"></i>
+              <span>Thunderstorm</span>
+            </button>
+            <button onclick="jumpToCondition('snowy')"
+              class="px-3 py-1 rounded-full text-xs font-bold bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-orange-500 hover:text-orange-500 transition-all flex items-center gap-1.5 shadow-sm active:scale-95">
+              <i data-lucide="snowflake" class="w-3 h-3 text-sky-400"></i>
+              <span>Snowy</span>
+            </button>
+            <button onclick="jumpToCondition('foggy')"
+              class="px-3 py-1 rounded-full text-xs font-bold bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-orange-500 hover:text-orange-500 transition-all flex items-center gap-1.5 shadow-sm active:scale-95">
+              <i data-lucide="cloud-fog" class="w-3 h-3 text-slate-400"></i>
+              <span>Foggy</span>
+            </button>
+            <button onclick="jumpToCondition('drizzle')"
+              class="px-3 py-1 rounded-full text-xs font-bold bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-orange-500 hover:text-orange-500 transition-all flex items-center gap-1.5 shadow-sm active:scale-95">
+              <i data-lucide="cloud-drizzle" class="w-3 h-3 text-cyan-400"></i>
+              <span>Drizzle</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <!-- Real-Time Telemetry Health Pill -->
+          <div
+            class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700 text-xs font-bold text-slate-700 dark:text-slate-300">
+            <span class="w-2 h-2 rounded-full bg-emerald-500 anim-live-pulse shadow-[0_0_8px_#10b981]"></span>
+            <span>Static Atlas: Verified</span>
+            <span class="text-slate-300 dark:text-slate-600">&bull;</span>
+            <span class="text-emerald-600 dark:text-emerald-400">Open-Meteo: Live</span>
+          </div>
+
+          <!-- Back to Top Button -->
+          <button id="footer-back-to-top"
+            class="p-2.5 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-orange-500 hover:bg-orange-500 hover:text-white text-slate-600 dark:text-slate-300 transition-all shadow-sm active:scale-95"
+            title="Scroll Back to Top" aria-label="Scroll back to top">
+            <i data-lucide="arrow-up" class="w-4 h-4"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Main Columns Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10">
+        <!-- Brand & Architecture Column (4 Cols) -->
+        <div class="lg:col-span-4 space-y-4">
+          <div class="flex items-center gap-3">
+            <div
+              class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-orange-500 via-amber-500 to-yellow-400 flex items-center justify-center text-white shadow-lg shadow-orange-500/25">
+              <i data-lucide="cloud-sun" class="w-5 h-5"></i>
+            </div>
+            <div>
+              <span class="font-black text-lg tracking-tight text-slate-900 dark:text-white block">Weather Atlas</span>
+              <span class="text-[11px] font-mono text-orange-500 font-bold block">Atmospheric Telemetry Engine</span>
+            </div>
+          </div>
+
+          <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed max-w-sm">
+            High-precision meteorological condition explorer demonstrating
+            deterministic data-to-UI conditional rendering alongside a
+            real-time station cockpit powered by Open-Meteo and Gemini 2.5
+            Flash intelligence.
+          </p>
+
+          <div class="pt-2 flex flex-wrap items-center gap-2">
+            <span
+              class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-mono font-bold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+              WCAG 2.2 AA Aligned
+            </span>
+            <span
+              class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-[11px] font-mono font-bold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
+              Static Data Spec 1.0
+            </span>
+          </div>
+        </div>
+
+        <!-- Col 2: Condition Explorer (2 Cols) -->
+        <div class="lg:col-span-2 space-y-3">
+          <h4
+            class="text-xs font-mono font-black uppercase tracking-wider text-slate-900 dark:text-white flex items-center gap-1.5">
+            <i data-lucide="grid" class="w-3.5 h-3.5 text-orange-500"></i>
+            Explorer
+          </h4>
+          <ul class="space-y-2 text-xs font-semibold text-slate-600 dark:text-slate-400">
+            <li>
+              <a href="#interactive-display" class="nav-anchor hover:text-orange-500 transition-colors">Interactive
+                Showcase</a>
+            </li>
+            <li>
+              <a href="#quick-selector" class="nav-anchor hover:text-orange-500 transition-colors">1-Click Quick
+                Selector</a>
+            </li>
+            <li>
+              <a href="#explore-conditions" class="nav-anchor hover:text-orange-500 transition-colors">Taxonomy
+                Directory (12)</a>
+            </li>
+            <li>
+              <a href="#categories" class="nav-anchor hover:text-orange-500 transition-colors">Category
+                Classification</a>
+            </li>
+            <li>
+              <a href="#final-cta" class="nav-anchor hover:text-orange-500 transition-colors">Explorer Reset</a>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Col 3: System & Architecture (2 Cols) -->
+        <div class="lg:col-span-2 space-y-3">
+          <h4
+            class="text-xs font-mono font-black uppercase tracking-wider text-slate-900 dark:text-white flex items-center gap-1.5">
+            <i data-lucide="shield-check" class="w-3.5 h-3.5 text-emerald-500"></i>
+            Architecture
+          </h4>
+          <ul class="space-y-2 text-xs font-semibold text-slate-600 dark:text-slate-400">
+            <li>
+              <a href="#guide" class="nav-anchor hover:text-orange-500 transition-colors">Accessibility Standards</a>
+            </li>
+            <li>
+              <a href="#guide" class="nav-anchor hover:text-orange-500 transition-colors">Non-Color-Only Indicators</a>
+            </li>
+            <li>
+              <a href="#how-it-works" class="nav-anchor hover:text-orange-500 transition-colors">Data-to-UI Mapping</a>
+            </li>
+            <li>
+              <a href="#use-cases" class="nav-anchor hover:text-orange-500 transition-colors">System Prototyping</a>
+            </li>
+            <li>
+              <a href="#faq" class="nav-anchor hover:text-orange-500 transition-colors">Technical Architecture FAQ</a>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Col 4: Real-time Station (2 Cols) -->
+        <div class="lg:col-span-2 space-y-3">
+          <h4
+            class="text-xs font-mono font-black uppercase tracking-wider text-slate-900 dark:text-white flex items-center gap-1.5">
+            <i data-lucide="activity" class="w-3.5 h-3.5 text-sky-500"></i>
+            Live Station
+          </h4>
+          <ul class="space-y-2 text-xs font-semibold text-slate-600 dark:text-slate-400">
+            <li>
+              <button onclick="
+                    openDashboard();
+                    switchNavTab('overview');
+                  " class="hover:text-orange-500 transition-colors text-left">
+                Live Pune Cockpit
+              </button>
+            </li>
+            <li>
+              <button onclick="
+                    openDashboard();
+                    switchNavTab('radar');
+                  " class="hover:text-orange-500 transition-colors text-left">
+                Doppler Radar Sweep
+              </button>
+            </li>
+            <li>
+              <button onclick="
+                    openDashboard();
+                    switchNavTab('airquality');
+                  " class="hover:text-orange-500 transition-colors text-left">
+                Air Quality Index (AQI)
+              </button>
+            </li>
+            <li>
+              <button onclick="
+                    openDashboard();
+                    switchNavTab('extended');
+                  " class="hover:text-orange-500 transition-colors text-left">
+                14-Day Trajectory
+              </button>
+            </li>
+            <li>
+              <button onclick="
+                    openDashboard();
+                    switchNavTab('gemini');
+                  " class="hover:text-orange-500 transition-colors text-left flex items-center gap-1">
+                <span>Gemini Copilot</span><span
+                  class="text-[9px] px-1 py-0.2 rounded bg-orange-100 dark:bg-orange-950 text-orange-600 font-bold">AI</span>
+              </button>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Col 5: Engineering Principles (2 Cols) -->
+        <div class="lg:col-span-2 space-y-3">
+          <h4
+            class="text-xs font-mono font-black uppercase tracking-wider text-slate-900 dark:text-white flex items-center gap-1.5">
+            <i data-lucide="code-2" class="w-3.5 h-3.5 text-purple-400"></i>
+            Engineering
+          </h4>
+          <ul class="space-y-2 text-xs font-semibold text-slate-600 dark:text-slate-400">
+            <li>
+              <span class="text-slate-500 dark:text-slate-400">Single Source Dataset</span>
+            </li>
+            <li>
+              <span class="text-slate-500 dark:text-slate-400">Open-Meteo REST API</span>
+            </li>
+            <li>
+              <span class="text-slate-500 dark:text-slate-400">WMO Weather Codes</span>
+            </li>
+            <li>
+              <span class="text-slate-500 dark:text-slate-400">CSS Tokens &amp; Themes</span>
+            </li>
+            <li>
+              <span class="text-slate-500 dark:text-slate-400">Zero Analytics Trackers</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Bottom Bar -->
+      <div
+        class="pt-8 border-t border-slate-200/70 dark:border-slate-800/70 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-slate-500 dark:text-slate-400">
+        <div class="flex items-center gap-2">
+          <span>&copy; <span id="current-year">2026</span> Weather Atlas Systems
+            &bull; Built with Semantic HTML5, CSS3 Custom Properties &amp;
+            Vanilla JavaScript</span>
+        </div>
+        <div class="flex items-center gap-4 text-[11px] font-mono">
+          <span class="text-emerald-600 dark:text-emerald-400 flex items-center gap-1">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+            Zero Third-Party UI Frameworks
+          </span>
+          <span class="text-slate-400 dark:text-slate-600">&bull;</span>
+          <span>Responsive 320px&ndash;4K</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ==========================================================================
+       FULLSCREEN EDGE-TO-EDGE ORIPIO WEATHER DASHBOARD (100vw, 100vh)
+       ========================================================================== -->
+  <div id="oripio-app-viewport" class="oripio-viewport" role="dialog" aria-modal="true"
+    aria-label="Live Weather Dashboard Station" hidden>
+    <!-- Ambient FX Layer -->
+    <div class="absolute inset-0 pointer-events-none overflow-hidden z-0" id="ambient-fx-canvas"></div>
+
+    <!-- Left Collapsible Sidebar -->
+    <aside id="dash-sidebar"
+      class="w-64 h-screen bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col justify-between py-6 shrink-0 z-20 select-none relative"
+      aria-label="Dashboard Nav Rail">
+      <div class="space-y-6">
+        <!-- Logo and Toggle -->
+        <div class="px-3 md:px-5 flex items-center justify-between gap-2">
+          <div class="flex items-center gap-3 overflow-hidden">
+            <div
+              class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-orange-500 to-amber-500 flex items-center justify-center text-white shadow-lg shadow-orange-500/30 shrink-0">
+              <i data-lucide="cloud-lightning" class="w-6 h-6"></i>
+            </div>
+            <div class="sidebar-expanded-item whitespace-nowrap overflow-hidden">
+              <h2 class="font-extrabold text-sm tracking-tight text-slate-900 dark:text-white">
+                Oripio Station
+              </h2>
+              <span class="text-[11px] font-semibold text-emerald-500 flex items-center gap-1">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 anim-live-pulse"></span>
+                Open-Meteo Feed
+              </span>
+            </div>
+          </div>
+
+          <button id="sidebar-toggle-btn"
+            class="p-2 rounded-xl text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+            title="Toggle Sidebar Width" aria-label="Collapse sidebar">
+            <i data-lucide="panel-left-close" id="sidebar-toggle-icon" class="w-5 h-5"></i>
+          </button>
+        </div>
+
+        <!-- 7 Feature Tabs with Tooltips -->
+        <nav class="space-y-1.5 px-2.5 md:px-3" id="dash-nav-list">
+          <div class="relative group">
+            <button
+              class="nav-tab-btn active w-full flex items-center gap-3.5 px-3.5 py-3 rounded-2xl text-sm font-bold transition-all text-orange-600 bg-orange-50 dark:bg-orange-950/50 dark:text-orange-400"
+              data-tab="overview">
+              <i data-lucide="layout-grid" class="w-5 h-5 shrink-0"></i>
+              <span class="sidebar-expanded-item truncate">Overview</span>
+            </button>
+            <span class="sidebar-tooltip">Overview</span>
+          </div>
+
+          <div class="relative group">
+            <button
+              class="nav-tab-btn w-full flex items-center gap-3.5 px-3.5 py-3 rounded-2xl text-sm font-semibold transition-all text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800"
+              data-tab="radar">
+              <i data-lucide="radar" class="w-5 h-5 shrink-0"></i>
+              <span class="sidebar-expanded-item truncate">Radar &amp; Satellite</span>
+            </button>
+            <span class="sidebar-tooltip">Radar &amp; Satellite</span>
+          </div>
+
+          <div class="relative group">
+            <button
+              class="nav-tab-btn w-full flex items-center gap-3.5 px-3.5 py-3 rounded-2xl text-sm font-semibold transition-all text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800"
+              data-tab="airquality">
+              <i data-lucide="wind" class="w-5 h-5 shrink-0"></i>
+              <span class="sidebar-expanded-item truncate">Air Quality &amp; Pollen</span>
+            </button>
+            <span class="sidebar-tooltip">Air Quality &amp; Pollen</span>
+          </div>
+
+          <div class="relative group">
+            <button
+              class="nav-tab-btn w-full flex items-center gap-3.5 px-3.5 py-3 rounded-2xl text-sm font-semibold transition-all text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800"
+              data-tab="extended">
+              <i data-lucide="calendar" class="w-5 h-5 shrink-0"></i>
+              <span class="sidebar-expanded-item truncate">Hourly &amp; 14-Day</span>
+            </button>
+            <span class="sidebar-tooltip">Hourly &amp; 14-Day</span>
+          </div>
+
+          <div class="relative group">
+            <button
+              class="nav-tab-btn w-full flex items-center gap-3.5 px-3.5 py-3 rounded-2xl text-sm font-semibold transition-all text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800"
+              data-tab="alerts">
+              <i data-lucide="alert-triangle" class="w-5 h-5 shrink-0"></i>
+              <span class="sidebar-expanded-item truncate">Alerts &amp; Hazards</span>
+            </button>
+            <span class="sidebar-tooltip">Alerts &amp; Hazards</span>
+          </div>
+
+          <div class="relative group">
+            <button
+              class="nav-tab-btn w-full flex items-center gap-3.5 px-3.5 py-3 rounded-2xl text-sm font-semibold transition-all text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800"
+              data-tab="gemini">
+              <i data-lucide="sparkles" class="w-5 h-5 shrink-0 text-orange-500"></i>
+              <span class="sidebar-expanded-item truncate">Gemini AI Copilot</span>
+            </button>
+            <span class="sidebar-tooltip">Gemini AI Copilot</span>
+          </div>
+
+          <div class="relative group">
+            <button
+              class="nav-tab-btn w-full flex items-center gap-3.5 px-3.5 py-3 rounded-2xl text-sm font-semibold transition-all text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800"
+              data-tab="settings">
+              <i data-lucide="settings" class="w-5 h-5 shrink-0"></i>
+              <span class="sidebar-expanded-item truncate">Settings</span>
+            </button>
+            <span class="sidebar-tooltip">Settings</span>
+          </div>
+        </nav>
+      </div>
+
+      <!-- Bottom Profile Card & Exit -->
+      <div class="px-2.5 md:px-3 space-y-2 border-t border-slate-200 dark:border-slate-800 pt-4">
+        <div class="relative group">
+          <button id="nav-user-profile-btn"
+            class="w-full flex items-center gap-3 p-2.5 rounded-2xl hover:bg-slate-100 dark:hover:bg-slate-800 text-left transition-colors"
+            title="Edit User Name">
+            <div
+              class="w-9 h-9 rounded-full bg-gradient-to-tr from-orange-500 to-pink-500 flex items-center justify-center font-black text-white text-xs shadow-sm shrink-0"
+              id="dash-user-avatar-side">
+              JJ
+            </div>
+            <div class="sidebar-expanded-item truncate">
+              <span class="block text-xs font-bold text-slate-900 dark:text-white truncate"
+                id="dash-user-name-side">Jatin Joshi</span>
+              <span class="block text-[10px] text-slate-400">Click to change name</span>
+            </div>
+          </button>
+          <span class="sidebar-tooltip">Edit Profile Name</span>
+        </div>
+
+        <div class="relative group">
+          <button id="dash-exit-btn"
+            class="w-full flex items-center gap-3.5 px-3.5 py-2.5 rounded-2xl text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/40 font-bold text-sm transition-colors"
+            title="Exit to Weather Atlas">
+            <i data-lucide="log-out" class="w-5 h-5 shrink-0"></i>
+            <span class="sidebar-expanded-item truncate">Exit to Atlas</span>
+          </button>
+          <span class="sidebar-tooltip">Exit to Atlas</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Frame (With data-lenis-prevent to preserve internal app scroll) -->
+    <main
+      class="flex-1 h-screen flex flex-col overflow-y-auto overflow-x-hidden relative z-10 transition-all duration-300"
+      id="dash-main-scroll" data-lenis-prevent>
+      <!-- Top Sticky App Bar -->
+      <header
+        class="sticky top-0 z-30 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 px-6 sm:px-10 py-3.5 flex items-center justify-between gap-6 flex-wrap transition-colors">
+        <!-- Left: Toggle & User Greeting -->
+        <div class="flex items-center gap-3.5">
+          <button id="topbar-sidebar-toggle"
+            class="p-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:text-orange-500 transition-colors"
+            title="Toggle Sidebar">
+            <i data-lucide="menu" class="w-4 h-4"></i>
+          </button>
+
+          <button id="dash-user-modal-trigger"
+            class="flex items-center gap-3 text-left hover:opacity-85 transition-opacity"
+            title="Click to customize your profile name">
+            <div
+              class="w-10 h-10 rounded-full bg-gradient-to-tr from-orange-500 to-pink-500 flex items-center justify-center font-black text-white text-sm shadow-md"
+              id="dash-user-avatar">
+              JJ
+            </div>
+            <div>
+              <span class="block text-xs text-slate-500 dark:text-slate-400 font-medium" id="dash-greeting-text">Good
+                Afternoon,</span>
+              <strong class="block text-base font-extrabold text-slate-900 dark:text-white flex items-center gap-1.5">
+                <span id="dash-user-name">Jatin Joshi</span>
+                <i data-lucide="pencil" class="w-3 h-3 text-slate-400 hover:text-orange-500"></i>
+              </strong>
+            </div>
+          </button>
+        </div>
+
+        <!-- City Search Input -->
+        <div class="relative flex-1 max-w-md">
+          <input type="text" id="dash-city-search"
+            class="w-full bg-slate-100 dark:bg-slate-800/90 border border-transparent focus:border-orange-500 rounded-full py-2 pl-4 pr-10 text-sm text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-orange-500/20 transition-all"
+            placeholder="Search global city (e.g., Pune, Tokyo, London)..." autocomplete="off" />
+          <button id="dash-search-submit" class="absolute right-3 top-2.5 text-slate-400 hover:text-orange-500"
+            title="Search City">
+            <i data-lucide="search" class="w-4 h-4"></i>
+          </button>
+        </div>
+
+        <!-- Utility Controls -->
+        <div class="flex items-center gap-3">
+          <button
+            class="flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800 text-emerald-600 dark:text-emerald-400 text-xs font-bold hover:scale-105 active:scale-95 transition-all"
+            id="btn-dash-gps" title="Locate via GPS">
+            <i data-lucide="navigation" class="w-3.5 h-3.5"></i>
+            <span>My Location</span>
+          </button>
+          <button
+            class="w-10 h-10 rounded-full border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-extrabold text-xs hover:border-orange-500 transition-colors"
+            id="btn-dash-unit" title="Toggle °C / °F">
+            °C
+          </button>
+          <button
+            class="p-2.5 rounded-full border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:text-orange-500 transition-colors"
+            id="btn-dash-theme" title="Toggle Light / Dark Mode">
+            <i data-lucide="moon" class="w-4 h-4 hidden dark:block"></i>
+            <i data-lucide="sun" class="w-4 h-4 block dark:hidden"></i>
+          </button>
+          <button id="btn-dash-back-top"
+            class="flex items-center gap-2 px-4 py-2 rounded-full bg-slate-900 hover:bg-orange-600 dark:bg-slate-100 dark:hover:bg-orange-500 text-white dark:text-slate-900 font-bold text-xs shadow-md transition-all active:scale-95"
+            title="Return to Weather Atlas">
+            <i data-lucide="arrow-left" class="w-4 h-4"></i>
+            <span>Back to Atlas</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- View Containers -->
+      <div class="p-6 sm:p-8 max-w-[1720px] mx-auto w-full flex-1">
+        <!-- VIEW 1: OVERVIEW -->
+        <div id="view-overview" class="dash-view-panel space-y-7">
+          <!-- Upper Row: Hero Card + Map -->
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-7">
+            <!-- Hero Card -->
+            <div
+              class="lg:col-span-7 rounded-3xl p-8 relative overflow-hidden flex flex-col justify-between min-h-[340px] shadow-xl border border-white/40 dark:border-slate-700/60 transition-all duration-500 hover-lift"
+              id="dash-hero-card" style="background: var(--hero-sunny)">
+              <div>
+                <div
+                  class="inline-flex items-center gap-2 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md px-4 py-1.5 rounded-full text-xs font-extrabold text-slate-900 dark:text-white shadow-sm mb-3">
+                  <i data-lucide="map-pin" class="w-3.5 h-3.5 text-orange-500"></i>
+                  <span id="dash-hero-city">Pune, Maharashtra, India</span>
+                </div>
+                <h2 class="text-3xl sm:text-4xl font-black text-slate-900 dark:text-white tracking-tight"
+                  id="dash-hero-title">
+                  Weather
+                </h2>
+                <p class="text-sm font-semibold text-slate-800/80 dark:text-slate-200/80" id="dash-hero-status">
+                  Now &bull; Live Telemetry Feed
+                </p>
+              </div>
+
+              <div class="mt-4">
+                <div
+                  class="text-6xl sm:text-7xl font-black text-slate-900 dark:text-white tracking-tighter leading-none"
+                  id="dash-hero-temp">
+                  28°C
+                </div>
+                <div class="text-sm font-semibold text-slate-800/90 dark:text-slate-200/90 mt-1">
+                  Feels like <span id="dash-hero-feels">29°C</span>
+                </div>
+
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-6">
+                  <div class="bg-white/90 dark:bg-slate-900/80 backdrop-blur-md p-3 rounded-2xl shadow-sm hover-lift">
+                    <span class="block text-[11px] font-bold uppercase tracking-wider text-slate-400">Visibility</span>
+                    <span class="text-base font-extrabold text-slate-900 dark:text-white" id="dash-hero-vis">10.0
+                      Km</span>
+                  </div>
+                  <div class="bg-white/90 dark:bg-slate-900/80 backdrop-blur-md p-3 rounded-2xl shadow-sm hover-lift">
+                    <span class="block text-[11px] font-bold uppercase tracking-wider text-slate-400">Humidity</span>
+                    <span class="text-base font-extrabold text-slate-900 dark:text-white" id="dash-hero-hum">52%</span>
+                  </div>
+                  <div class="bg-white/90 dark:bg-slate-900/80 backdrop-blur-md p-3 rounded-2xl shadow-sm hover-lift">
+                    <span class="block text-[11px] font-bold uppercase tracking-wider text-slate-400">Wind</span>
+                    <span class="text-base font-extrabold text-slate-900 dark:text-white" id="dash-hero-wind">14
+                      km/h</span>
+                  </div>
+                  <div class="bg-white/90 dark:bg-slate-900/80 backdrop-blur-md p-3 rounded-2xl shadow-sm hover-lift">
+                    <span class="block text-[11px] font-bold uppercase tracking-wider text-slate-400">UV Index</span>
+                    <span class="text-base font-extrabold text-slate-900 dark:text-white" id="dash-hero-uv">6.4
+                      High</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="absolute right-4 top-4 w-48 h-48 sm:w-56 sm:h-56 pointer-events-none" id="hero-anim-scene"
+                aria-hidden="true"></div>
+            </div>
+
+            <!-- World Map Card -->
+            <div
+              class="lg:col-span-5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl relative overflow-hidden min-h-[340px] shadow-xl flex items-center justify-center p-4 hover-lift">
+              <svg class="absolute inset-0 w-full h-full object-cover" viewBox="0 0 600 350" preserveAspectRatio="none">
+                <rect width="600" height="350" fill="#9cd3e6" opacity="0.35" />
+                <path d="M20,40 Q60,20 120,35 Q180,50 190,110 Q160,160 120,150 Q90,130 50,155 Q20,110 20,40 Z"
+                  fill="currentColor" class="text-slate-300 dark:text-slate-800" opacity="0.4" />
+                <path d="M140,170 Q170,165 190,190 Q200,240 170,290 Q140,310 130,260 Q120,200 140,170 Z"
+                  fill="currentColor" class="text-slate-300 dark:text-slate-800" opacity="0.4" />
+                <path d="M230,30 Q310,20 380,40 Q440,30 460,90 Q430,130 380,110 Q320,130 270,100 Q240,60 230,30 Z"
+                  fill="currentColor" class="text-slate-300 dark:text-slate-800" opacity="0.4" />
+                <path d="M260,130 Q330,120 360,170 Q370,240 330,270 Q290,260 270,210 Q250,170 260,130 Z"
+                  fill="currentColor" class="text-slate-300 dark:text-slate-800" opacity="0.4" />
+                <path d="M380,80 Q480,60 560,90 Q580,160 520,190 Q460,180 430,220 Q400,160 380,80 Z" fill="currentColor"
+                  class="text-slate-300 dark:text-slate-800" opacity="0.4" />
+                <path d="M470,220 Q530,210 560,250 Q540,290 490,285 Q460,260 470,220 Z" fill="currentColor"
+                  class="text-slate-300 dark:text-slate-800" opacity="0.4" />
+              </svg>
+
+              <!-- Map Pins -->
+              <button
+                class="absolute z-10 px-3 py-1.5 rounded-full text-xs font-bold bg-orange-500 text-white shadow-lg shadow-orange-500/30 flex items-center gap-1.5 hover:scale-110 active:scale-95 transition-all"
+                style="top: 47%; left: 62%" onclick="quickSelectCity('Pune', 18.5204, 73.8567, 'India')">
+                <span class="w-1.5 h-1.5 rounded-full bg-white anim-live-pulse"></span>
+                <span>Pune <b id="pin-val-pune">28°C</b></span>
+              </button>
+              <button
+                class="absolute z-10 px-2.5 py-1 rounded-full text-[11px] font-bold bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-700 shadow-md hover:scale-110 transition-all"
+                style="top: 32%; left: 22%" onclick="quickSelectCity('New York', 40.7128, -74.006, 'USA')">
+                <span>New York <b id="pin-val-ny">18°C</b></span>
+              </button>
+              <button
+                class="absolute z-10 px-2.5 py-1 rounded-full text-[11px] font-bold bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-700 shadow-md hover:scale-110 transition-all"
+                style="top: 25%; left: 48%" onclick="quickSelectCity('London', 51.5074, -0.1278, 'UK')">
+                <span>London <b id="pin-val-london">15°C</b></span>
+              </button>
+              <button
+                class="absolute z-10 px-2.5 py-1 rounded-full text-[11px] font-bold bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-700 shadow-md hover:scale-110 transition-all"
+                style="top: 26%; left: 80%" onclick="quickSelectCity('Tokyo', 35.6762, 139.6503, 'Japan')">
+                <span>Tokyo <b id="pin-val-tokyo">20°C</b></span>
+              </button>
+              <button
+                class="absolute z-10 px-2.5 py-1 rounded-full text-[11px] font-bold bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-700 shadow-md hover:scale-110 transition-all"
+                style="top: 74%; left: 85%" onclick="
+                    quickSelectCity('Sydney', -33.8688, 151.2093, 'Australia')
+                  ">
+                <span>Sydney <b id="pin-val-sydney">22°C</b></span>
+              </button>
+
+              <div
+                class="absolute bottom-4 left-1/2 -translate-x-1/2 z-10 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border border-slate-200 dark:border-slate-700 px-6 py-2.5 rounded-2xl shadow-xl flex items-center gap-4">
+                <span class="text-xl font-black text-orange-500" id="map-pill-temp">28°C</span>
+                <div>
+                  <strong class="block text-xs font-bold text-slate-900 dark:text-white" id="map-pill-city">Pune
+                    Active</strong>
+                  <span class="text-[11px] text-slate-500" id="map-pill-cond">Clear Skies</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 24-Hour Hourly Trajectory Reel -->
+          <section
+            class="bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-3xl p-6 sm:p-7 shadow-xl space-y-4 relative overflow-hidden hover-lift">
+            <div class="flex items-center justify-between flex-wrap gap-4">
+              <div class="flex items-center gap-3">
+                <div
+                  class="w-10 h-10 rounded-2xl bg-orange-100 dark:bg-orange-950/60 flex items-center justify-center text-orange-600 dark:text-orange-400">
+                  <i data-lucide="clock" class="w-5 h-5"></i>
+                </div>
+                <div>
+                  <div class="flex items-center gap-2">
+                    <h3 class="text-lg font-black text-slate-900 dark:text-white tracking-tight">
+                      Hourly Trajectory
+                    </h3>
+                    <span
+                      class="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700">Next
+                      24 Hours</span>
+                  </div>
+                  <p class="text-xs text-slate-500 dark:text-slate-400">
+                    Continuous thermal trendline with kinetic glide
+                  </p>
+                </div>
+              </div>
+
+              <div class="flex items-center gap-2">
+                <span class="text-xs font-semibold text-slate-400 hidden sm:inline mr-2">Slide or drag:</span>
+                <button id="hourly-scroll-prev"
+                  class="w-9 h-9 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 hover:bg-orange-500 hover:border-orange-500 hover:text-white text-slate-600 dark:text-slate-300 flex items-center justify-center transition-all disabled:opacity-30 disabled:pointer-events-none active:scale-95"
+                  title="Scroll left">
+                  <i data-lucide="chevron-left" class="w-4 h-4"></i>
+                </button>
+                <button id="hourly-scroll-next"
+                  class="w-9 h-9 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 hover:bg-orange-500 hover:border-orange-500 hover:text-white text-slate-600 dark:text-slate-300 flex items-center justify-center transition-all disabled:opacity-30 disabled:pointer-events-none active:scale-95"
+                  title="Scroll right">
+                  <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- Sparkline SVG -->
+            <div class="w-full h-14 relative overflow-hidden px-2 pt-1">
+              <svg id="hourly-sparkline-svg" class="w-full h-full overflow-visible" preserveAspectRatio="none"
+                viewBox="0 0 1000 50">
+                <defs>
+                  <linearGradient id="sparklineGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#f97316" stop-opacity="0.35" />
+                    <stop offset="100%" stop-color="#f97316" stop-opacity="0.0" />
+                  </linearGradient>
+                  <linearGradient id="strokeGrad" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0%" stop-color="#f97316" />
+                    <stop offset="50%" stop-color="#ec4899" />
+                    <stop offset="100%" stop-color="#3b82f6" />
+                  </linearGradient>
+                </defs>
+                <path id="sparkline-fill" d="" fill="url(#sparklineGrad)" />
+                <path id="sparkline-stroke" d="" fill="none" stroke="url(#strokeGrad)" stroke-width="2.5"
+                  stroke-linecap="round" />
+              </svg>
+            </div>
+
+            <!-- Cards Container (Preserving pure kinetic horizontal scroll with no Lenis conflict) -->
+            <div class="flex gap-3.5 overflow-x-auto pb-3 pt-1 px-1 scroll-smooth" id="dash-hourly-scroll"
+              data-lenis-prevent></div>
+          </section>
+
+          <!-- Gemini Synthesis -->
+          <div
+            class="bg-white dark:bg-slate-900 border border-orange-500/30 rounded-3xl p-6 sm:p-7 shadow-xl space-y-4 hover-lift">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <span
+                  class="px-3 py-1 rounded-full bg-gradient-to-r from-orange-500 to-pink-500 text-white font-extrabold text-xs tracking-wider uppercase shadow-md shadow-orange-500/20">Gemini
+                  2.5 Flash</span>
+                <h3 class="text-lg font-black text-slate-900 dark:text-white">
+                  AI Atmospheric Synthesis
+                </h3>
+              </div>
+              <button class="text-xs font-bold text-orange-500 hover:underline" onclick="switchNavTab('gemini')">
+                Open Copilot &rarr;
+              </button>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div
+                class="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-700/80 hover-lift">
+                <div
+                  class="flex items-center gap-2 text-xs font-extrabold text-orange-500 uppercase tracking-wider mb-1">
+                  <i data-lucide="shirt" class="w-4 h-4"></i>
+                  <span>Wardrobe</span>
+                </div>
+                <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed" id="ai-wardrobe">
+                  Breathable cotton, sunglasses, and airy footwear
+                  recommended.
+                </p>
+              </div>
+
+              <div
+                class="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-700/80 hover-lift">
+                <div
+                  class="flex items-center gap-2 text-xs font-extrabold text-orange-500 uppercase tracking-wider mb-1">
+                  <i data-lucide="activity" class="w-4 h-4"></i>
+                  <span>Workout Window</span>
+                </div>
+                <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed" id="ai-activity">
+                  Morning window (6:30 AM – 9:00 AM) optimal before solar
+                  peak.
+                </p>
+              </div>
+
+              <div
+                class="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-700/80 hover-lift">
+                <div
+                  class="flex items-center gap-2 text-xs font-extrabold text-orange-500 uppercase tracking-wider mb-1">
+                  <i data-lucide="heart-pulse" class="w-4 h-4"></i>
+                  <span>Hydration</span>
+                </div>
+                <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed" id="ai-health">
+                  Target 2.5L daily hydration. Moderate humidity promotes
+                  clean respiration.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Lower Row: Comparisons + Day Breakdown + Tomorrow -->
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-7">
+            <div class="lg:col-span-4 space-y-4">
+              <button
+                class="w-full text-left p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-between hover:border-orange-500 hover:-translate-y-0.5 transition-all shadow-md hover-lift"
+                onclick="quickSelectCity('New York', 40.7128, -74.006, 'USA')">
+                <div>
+                  <h4 class="font-extrabold text-sm text-slate-900 dark:text-white">
+                    New York
+                  </h4>
+                  <p class="text-xs text-slate-400">USA &bull; Coastal</p>
+                </div>
+                <span class="font-extrabold text-sm text-orange-500" id="city-temp-ny">18°C / 12°C</span>
+              </button>
+
+              <button
+                class="w-full text-left p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex items-center justify-between hover:border-orange-500 hover:-translate-y-0.5 transition-all shadow-md hover-lift"
+                onclick="quickSelectCity('London', 51.5074, -0.1278, 'UK')">
+                <div>
+                  <h4 class="font-extrabold text-sm text-slate-900 dark:text-white">
+                    London
+                  </h4>
+                  <p class="text-xs text-slate-400">UK &bull; Temperate</p>
+                </div>
+                <span class="font-extrabold text-sm text-orange-500" id="city-temp-london">15°C / 9°C</span>
+              </button>
+
+              <div
+                class="p-6 rounded-3xl bg-slate-950 text-white flex items-center justify-between shadow-xl border border-slate-800 hover-lift">
+                <div>
+                  <h4 class="font-extrabold text-base">
+                    Humidity &amp; Air Quality
+                  </h4>
+                  <p class="text-xs text-slate-400 mt-1" id="aqi-badge">
+                    Optimal &bull; Clean PM2.5
+                  </p>
+                  <div class="text-2xl font-black text-sky-400 mt-2" id="dash-navy-hum">
+                    52%
+                  </div>
+                </div>
+                <div
+                  class="w-14 h-14 rounded-2xl bg-slate-900 border border-slate-800 flex items-center justify-center text-amber-400">
+                  <i data-lucide="droplets" class="w-7 h-7"></i>
+                </div>
+              </div>
+            </div>
+
+            <div
+              class="lg:col-span-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-7 shadow-xl flex flex-col justify-between hover-lift">
+              <div>
+                <h3 class="text-lg font-black text-slate-900 dark:text-white">
+                  How is the temperature today?
+                </h3>
+                <p class="text-xs text-slate-500 dark:text-slate-400">
+                  Diurnal solar projection
+                </p>
+              </div>
+
+              <div class="grid grid-cols-4 gap-2 text-center my-6">
+                <div class="flex flex-col items-center gap-2 p-2 rounded-xl">
+                  <div
+                    class="w-12 h-12 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-amber-500">
+                    <i data-lucide="sunrise" class="w-5 h-5"></i>
+                  </div>
+                  <span class="text-lg font-extrabold text-slate-900 dark:text-white" id="traj-temp-morn">22°</span>
+                  <span class="text-[11px] font-bold text-slate-400">Morning</span>
+                </div>
+
+                <div
+                  class="flex flex-col items-center gap-2 p-2 rounded-xl bg-orange-50 dark:bg-orange-950/40 border border-orange-200 dark:border-orange-800/80">
+                  <div
+                    class="w-12 h-12 rounded-full bg-orange-500 text-white flex items-center justify-center shadow-md">
+                    <i data-lucide="sun" class="w-5 h-5"></i>
+                  </div>
+                  <span class="text-lg font-extrabold text-orange-600 dark:text-orange-400"
+                    id="traj-temp-noon">29°</span>
+                  <span class="text-[11px] font-bold text-orange-600 dark:text-orange-400">Afternoon</span>
+                </div>
+
+                <div class="flex flex-col items-center gap-2 p-2 rounded-xl">
+                  <div
+                    class="w-12 h-12 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-sky-500">
+                    <i data-lucide="sunset" class="w-5 h-5"></i>
+                  </div>
+                  <span class="text-lg font-extrabold text-slate-900 dark:text-white" id="traj-temp-eve">25°</span>
+                  <span class="text-[11px] font-bold text-slate-400">Evening</span>
+                </div>
+
+                <div class="flex flex-col items-center gap-2 p-2 rounded-xl">
+                  <div
+                    class="w-12 h-12 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-indigo-400">
+                    <i data-lucide="moon" class="w-5 h-5"></i>
+                  </div>
+                  <span class="text-lg font-extrabold text-slate-900 dark:text-white" id="traj-temp-night">20°</span>
+                  <span class="text-[11px] font-bold text-slate-400">Night</span>
+                </div>
+              </div>
+
+              <span class="text-[11px] text-slate-400 text-center block">Calculated via Open-Meteo Solar Model</span>
+            </div>
+
+            <div
+              class="lg:col-span-4 rounded-3xl p-6 sm:p-7 relative overflow-hidden flex flex-col justify-between shadow-xl text-slate-900 dark:text-white hover-lift"
+              style="
+                  background: linear-gradient(
+                    135deg,
+                    #dcfce7 0%,
+                    #bbf7d0 60%,
+                    #e2fbd6 100%
+                  );
+                ">
+              <div>
+                <span class="text-xs font-black uppercase tracking-wider opacity-75">Tomorrow</span>
+                <h4 class="text-2xl font-black mt-1" id="dash-tomorrow-city">
+                  Pune, India
+                </h4>
+              </div>
+
+              <div class="my-6">
+                <div class="text-5xl font-black leading-none" id="dash-tomorrow-temp">
+                  30°C
+                </div>
+                <div class="text-sm font-bold opacity-85 mt-2" id="dash-tomorrow-cond">
+                  Mostly Sunny
+                </div>
+              </div>
+
+              <div class="text-xs font-semibold opacity-70">
+                Diurnal shift &plusmn;2.4°C expected
+              </div>
+
+              <div class="absolute right-2 bottom-2 w-32 h-36 opacity-90 pointer-events-none" aria-hidden="true">
+                <svg viewBox="0 0 140 160" fill="none">
+                  <path d="M40 70 Q75 30 110 70 Z" fill="#ea580c" />
+                  <path d="M75 70 L75 110 Q75 118 68 118 Q62 118 62 112" stroke="#475569" stroke-width="3" fill="none"
+                    stroke-linecap="round" />
+                  <rect x="100" y="95" width="28" height="42" rx="5" fill="#64748b" />
+                  <path d="M60 120 L60 145 L50 145" stroke="#1e293b" stroke-width="6" stroke-linecap="round"
+                    stroke-linejoin="round" />
+                  <path d="M75 120 L75 145 L85 145" stroke="#1e293b" stroke-width="6" stroke-linecap="round"
+                    stroke-linejoin="round" />
+                  <path d="M55 90 L80 90 L78 120 L58 120 Z" fill="#ea580c" />
+                  <circle cx="68" cy="78" r="8" fill="#fed7aa" />
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- VIEW 2: RADAR & SATELLITE -->
+        <div id="view-radar" class="dash-view-panel space-y-6 hidden">
+          <div class="flex items-center justify-between flex-wrap gap-4">
+            <div>
+              <h2 class="text-2xl font-black text-slate-900 dark:text-white">
+                Interactive Doppler Radar Sweep
+              </h2>
+              <p class="text-sm text-slate-500 dark:text-slate-400">
+                High-resolution radar reflectivity model
+              </p>
+            </div>
+            <span
+              class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-100 dark:bg-emerald-950/80 text-emerald-600 dark:text-emerald-400 text-xs font-bold">
+              <span class="w-2 h-2 rounded-full bg-emerald-500 anim-live-pulse"></span>
+              Sweep Active
+            </span>
+          </div>
+
+          <div
+            class="relative w-full aspect-[16/9] min-h-[460px] bg-slate-950 rounded-3xl overflow-hidden border border-slate-800 shadow-2xl flex items-center justify-center">
+            <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+              <div class="w-48 h-48 rounded-full border border-emerald-500/30"></div>
+              <div class="w-80 h-80 rounded-full border border-emerald-500/25"></div>
+              <div class="w-[30rem] h-[30rem] rounded-full border border-emerald-500/15"></div>
+              <div class="absolute w-full h-[1px] bg-emerald-500/20"></div>
+              <div class="absolute h-full w-[1px] bg-emerald-500/20"></div>
+            </div>
+
+            <div class="absolute w-96 h-96 pointer-events-none anim-radar-sweep">
+              <div class="w-full h-full" style="
+                    background: conic-gradient(
+                      from 0deg,
+                      rgba(16, 185, 129, 0.45) 0deg,
+                      transparent 65deg
+                    );
+                  "></div>
+            </div>
+
+            <div
+              class="absolute z-10 p-4 rounded-2xl bg-slate-900/90 border border-slate-700/80 text-white backdrop-blur-md shadow-xl text-center space-y-2">
+              <div class="flex items-center gap-2 justify-center text-amber-400 font-extrabold text-sm">
+                <i data-lucide="radio" class="w-4 h-4"></i>
+                <span id="radar-center-city">Pune Telemetry Cell</span>
+              </div>
+              <div class="text-xs text-slate-300">
+                Precipitation Band:
+                <strong class="text-emerald-400">Scattered 0.2 mm/hr</strong>
+              </div>
+              <div class="text-[11px] text-slate-400">
+                Reflectivity: 18 dBZ &bull; Doppler Shift: Calm
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- VIEW 3: AIR QUALITY -->
+        <div id="view-airquality" class="dash-view-panel space-y-6 hidden">
+          <div>
+            <h2 class="text-2xl font-black text-slate-900 dark:text-white">
+              Air Quality &amp; Atmospheric Chemistry
+            </h2>
+            <p class="text-sm text-slate-500 dark:text-slate-400">
+              Particulate density and bio-aerosol diagnostics
+            </p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div
+              class="p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xl space-y-4 hover-lift">
+              <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Overall Air Quality Index</span>
+              <div class="flex items-baseline gap-3">
+                <span class="text-5xl font-black text-emerald-500" id="aqi-val-main">48</span>
+                <span
+                  class="px-3 py-1 rounded-full bg-emerald-100 dark:bg-emerald-950/80 text-emerald-600 dark:text-emerald-400 font-extrabold text-xs">Good
+                  Air Quality</span>
+              </div>
+              <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+                Air pollution poses little or no risk to healthy individuals.
+              </p>
+              <div class="w-full bg-slate-100 dark:bg-slate-800 h-2 rounded-full overflow-hidden">
+                <div class="bg-emerald-500 h-full w-[24%]"></div>
+              </div>
+            </div>
+
+            <div
+              class="p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xl space-y-3 hover-lift">
+              <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Fine Particulate (PM2.5)</span>
+              <div class="text-3xl font-black text-slate-900 dark:text-white">
+                12.4
+                <span class="text-xs text-slate-400 font-normal">µg/m³</span>
+              </div>
+              <p class="text-xs text-emerald-500 font-semibold">
+                Below WHO 24-hour guideline target
+              </p>
+            </div>
+
+            <div
+              class="p-6 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xl space-y-3 hover-lift">
+              <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Coarse Dust (PM10)</span>
+              <div class="text-3xl font-black text-slate-900 dark:text-white">
+                28.1
+                <span class="text-xs text-slate-400 font-normal">µg/m³</span>
+              </div>
+              <p class="text-xs text-emerald-500 font-semibold">
+                Optimal atmospheric transparency
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- VIEW 4: EXTENDED 14-DAY FORECAST -->
+        <div id="view-extended" class="dash-view-panel space-y-6 hidden">
+          <div>
+            <h2 class="text-2xl font-black text-slate-900 dark:text-white">
+              Expanded 14-Day Trajectory
+            </h2>
+            <p class="text-sm text-slate-500 dark:text-slate-400">
+              Ensemble medium-range projection model
+            </p>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-7 gap-3.5" id="extended-14day-grid"></div>
+        </div>
+
+        <!-- VIEW 5: ALERTS -->
+        <div id="view-alerts" class="dash-view-panel space-y-6 hidden">
+          <div>
+            <h2 class="text-2xl font-black text-slate-900 dark:text-white">
+              Active Meteorological Warnings
+            </h2>
+            <p class="text-sm text-slate-500 dark:text-slate-400">
+              Official weather advisories
+            </p>
+          </div>
+
+          <div class="space-y-4">
+            <div class="p-6 rounded-3xl bg-amber-500/10 border border-amber-500/30 flex items-start gap-4 hover-lift">
+              <div
+                class="w-12 h-12 rounded-2xl bg-amber-500/20 text-amber-500 flex items-center justify-center shrink-0">
+                <i data-lucide="sun" class="w-6 h-6"></i>
+              </div>
+              <div class="space-y-1">
+                <div class="flex items-center gap-3">
+                  <h3 class="font-extrabold text-base text-slate-900 dark:text-white">
+                    Moderate Solar UV Advisory
+                  </h3>
+                  <span
+                    class="px-2.5 py-0.5 rounded-full bg-amber-500 text-white font-extrabold text-[10px] uppercase">Moderate
+                    Risk</span>
+                </div>
+                <p class="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                  Solar radiation is expected to peak between 11:30 AM and
+                  2:30 PM. Wear broad-spectrum sunscreen and UV eyewear.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- VIEW 6: GEMINI AI COPILOT -->
+        <div id="view-gemini" class="dash-view-panel space-y-6 hidden">
+          <div>
+            <h2 class="text-2xl font-black text-slate-900 dark:text-white">
+              Gemini 2.5 Flash Atmospheric Copilot
+            </h2>
+            <p class="text-sm text-slate-500 dark:text-slate-400">
+              Natural language weather assistant
+            </p>
+          </div>
+
+          <div
+            class="bg-white dark:bg-slate-900 border border-orange-500/30 rounded-3xl p-6 sm:p-8 shadow-xl space-y-6">
+            <div class="flex items-center gap-2 flex-wrap text-xs">
+              <span class="font-bold text-orange-500">Suggested Inquiries:</span>
+              <button
+                class="px-3.5 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-orange-500 hover:text-white transition-colors"
+                onclick="
+                    askCopilot(
+                      'What should I pack for a 3-day trip in this weather?',
+                    )
+                  ">
+                Pack for 3-day trip
+              </button>
+              <button
+                class="px-3.5 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-orange-500 hover:text-white transition-colors"
+                onclick="
+                    askCopilot('Can I plan a bicycle ride this evening?')
+                  ">
+                Evening cycling window?
+              </button>
+              <button
+                class="px-3.5 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-orange-500 hover:text-white transition-colors"
+                onclick="
+                    askCopilot(
+                      'How will the temperature feel during late night?',
+                    )
+                  ">
+                Late night chill?
+              </button>
+            </div>
+
+            <div class="flex gap-3">
+              <input type="text" id="copilot-full-input"
+                class="flex-1 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-full px-6 py-3 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-orange-500"
+                placeholder="Ask Gemini any custom question about clothing, plans, or conditions..." />
+              <button id="copilot-full-submit"
+                class="px-8 py-3 rounded-full bg-gradient-to-r from-orange-500 to-amber-500 text-white font-extrabold text-sm shadow-lg hover:from-orange-600 hover:to-amber-600 transition-all active:scale-95">
+                Send Query
+              </button>
+            </div>
+
+            <div
+              class="p-6 rounded-2xl bg-slate-50 dark:bg-slate-800/80 border-l-4 border-orange-500 text-sm text-slate-700 dark:text-slate-200 leading-relaxed min-h-[100px] flex items-center"
+              id="copilot-full-reply">
+              Welcome! Ask any question above or choose a suggested inquiry to
+              consult Gemini 2.5 Flash on current atmospheric readings.
+            </div>
+          </div>
+        </div>
+
+        <!-- VIEW 7: SETTINGS -->
+        <div id="view-settings" class="dash-view-panel space-y-6 hidden">
+          <div>
+            <h2 class="text-2xl font-black text-slate-900 dark:text-white">
+              Preferences &amp; Settings
+            </h2>
+            <p class="text-sm text-slate-500 dark:text-slate-400">
+              Configure units, defaults, and data cache
+            </p>
+          </div>
+
+          <div
+            class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 shadow-xl max-w-2xl space-y-6">
+            <div class="flex items-center justify-between py-3 border-b border-slate-100 dark:border-slate-800">
+              <div>
+                <strong class="block text-sm text-slate-900 dark:text-white">Default Weather City</strong>
+                <span class="text-xs text-slate-400">Loaded upon station launch</span>
+              </div>
+              <span class="text-xs font-mono font-bold px-3 py-1 bg-slate-100 dark:bg-slate-800 rounded-lg">Pune, India
+                (18.52° N)</span>
+            </div>
+
+            <div class="flex items-center justify-between py-3 border-b border-slate-100 dark:border-slate-800">
+              <div>
+                <strong class="block text-sm text-slate-900 dark:text-white">Temperature Scale</strong>
+                <span class="text-xs text-slate-400">Celsius or Fahrenheit</span>
+              </div>
+              <button class="px-4 py-1.5 rounded-xl border border-slate-300 dark:border-slate-700 text-xs font-bold"
+                id="settings-unit-toggle">
+                Metric (°C)
+              </button>
+            </div>
+
+            <div class="pt-4 flex justify-between items-center">
+              <span class="text-xs text-slate-400">Storage key: <code>kroma_user_name</code></span>
+              <button
+                class="px-4 py-2 rounded-xl bg-rose-50 text-rose-600 dark:bg-rose-950/40 text-xs font-bold hover:bg-rose-100 transition-colors"
+                id="btn-reset-cache">
+                Reset Local Data
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Profile Modal -->
+  <div id="user-profile-modal"
+    class="fixed inset-0 z-[10000] bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 hidden"
+    role="dialog" aria-modal="true">
+    <div
+      class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl space-y-6">
+      <div class="flex items-center justify-between">
+        <h3 class="text-lg font-black text-slate-900 dark:text-white">
+          Personalize Dashboard
+        </h3>
+        <button id="modal-close-btn"
+          class="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-900 dark:hover:text-white">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <div class="space-y-4">
+        <div>
+          <label for="input-user-name"
+            class="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-2">Your
+            Name</label>
+          <input type="text" id="input-user-name"
+            class="w-full bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-2xl px-4 py-2.5 text-sm text-slate-900 dark:text-white focus:outline-none focus:border-orange-500"
+            placeholder="e.g. Jatin Joshi..." maxlength="30" />
+        </div>
+      </div>
+
+      <div class="flex items-center justify-end gap-3 pt-4 border-t border-slate-100 dark:border-slate-800">
+        <button id="modal-cancel-btn"
+          class="px-4 py-2 rounded-xl text-xs font-bold text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800">
+          Cancel
+        </button>
+        <button id="modal-save-btn"
+          class="px-5 py-2 rounded-xl bg-orange-500 hover:bg-orange-600 text-white font-extrabold text-xs shadow-md">
+          Save Profile
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       VANILLA JAVASCRIPT LOGIC + OFFICIAL LENIS ENGINE + 60FPS LERP CURSOR
+       ========================================================================== -->
+  <script src="script.js"></script>
+</body>
+
+</html>
